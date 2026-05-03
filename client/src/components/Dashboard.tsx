@@ -151,7 +151,7 @@ export default function Dashboard() {
   const theme = useTheme();
   const { address, isConnected, chain } = useAccount();
 
-  // State
+
   const [depositOpen, setDepositOpen] = useState(false);
   const [depositAmount, setDepositAmount] = useState("");
   const [borrowOpen, setBorrowOpen] = useState(false);
@@ -469,7 +469,7 @@ export default function Dashboard() {
       }}
     >
       <Container maxWidth="lg">
-        {/* Network Check */}
+        {/* cheking network */}
         {isConnected && chain?.id !== sepolia.id && (
           <Alert
             severity="warning"
