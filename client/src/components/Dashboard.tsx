@@ -19,7 +19,6 @@ import {
   Snackbar,
   Paper,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import WarningIcon from "@mui/icons-material/Warning";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
@@ -173,7 +172,6 @@ export default function Dashboard() {
   const {
     data: totalRaw,
     isLoading: isLoadingPool,
-    error: poolError,
     refetch: refetchPool,
   } = useReadContract({
     address: CONTRACT_ADDRESS,
