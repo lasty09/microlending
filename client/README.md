@@ -1,73 +1,130 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+\# MicroLend — Frontend
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+\## Overview
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+React + TypeScript frontend for the MicroLend platform. Connects to the StudentLending smart contract on Sepolia testnet via Wagmi v2 and RainbowKit.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+
+\## Pages
+
+
+
+| Route | Component | Description |
+
+|---|---|---|
+
+| `/` | Dashboard | Pool stats, loan status, deposit and borrow dialogs |
+
+| `/borrow` | Borrow | Loan application form with live summary |
+
+| `/lend` | Lend | Deposit interface and lender benefits |
+
+| `/how-it-works` | HowItWorks | Platform explainer |
+
+
+
+\## Key Libraries
+
+
+
+| Library | Purpose |
+
+|---|---|
+
+| Wagmi v2 | React hooks for blockchain interaction |
+
+| RainbowKit | Wallet connection UI |
+
+| Viem | ABI encoding, unit parsing |
+
+| MUI v7 | UI components |
+
+| TailwindCSS v4 | Utility styling |
+
+| React Router v7 | Client-side routing |
+
+
+
+\## Blockchain Interaction Pattern
+
+
+
+Reading from chain (free, no gas):
+
+```typescript
+
+const { data } = useReadContract({
+
+&#x20; address: CONTRACT\_ADDRESS,
+
+&#x20; abi: ABI,
+
+&#x20; functionName: "getLoanDetails",
+
+&#x20; args: \[address],
+
+});
+
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Writing to chain (requires gas + MetaMask confirmation):
+
+```typescript
+
+const { writeContract } = useWriteContract();
+
+writeContract({
+
+&#x20; address: CONTRACT\_ADDRESS,
+
+&#x20; abi: ABI,
+
+&#x20; functionName: "borrow",
+
+&#x20; args: \[parseUnits("15000", 2)],
+
+});
+
 ```
+
+
+
+\## Token Decimal Handling
+
+
+
+The MockERC20 token uses 2 decimals. All UI values are in KSh display units:
+
+
+
+```typescript
+
+// KSh 15,000 display → 1,500,000 on-chain
+
+parseUnits("15000", 2) // → 1500000n
+
+
+
+// 1,500,000 on-chain → KSh 15,000 display
+
+formatUnits(1500000n, 2) // → "15000"
+
+```
+
+
+
+\## Two-Step Token Flow
+
+
+
+Depositing and repaying require ERC20 approval before the contract can pull tokens:
+
