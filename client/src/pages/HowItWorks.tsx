@@ -15,6 +15,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   Chip,
+  Button,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
@@ -38,7 +39,7 @@ export default function HowItWorks() {
       label: "Connect Your Wallet",
       icon: <AccountBalanceWalletIcon />,
       description:
-        "Connect your MetaMask or any Web3 wallet to the platform.\n\n Make sure you're on the Sepolia testnet.",
+        "Connect your MetaMask or any Web3 wallet to the platform. Make sure you're on the Sepolia testnet.",
       details: [
         "Install MetaMask browser extension",
         "Create or import a wallet",
@@ -122,7 +123,7 @@ export default function HowItWorks() {
       icon: <TrendingUpIcon />,
       title: "Fixed 5% Interest",
       description:
-        "Simple, transparent pricing. No hidden fees, no variable rates. Just a straightforward 5% annual interest.",
+        "Simple, transparent pricing. No hidden fees, no variable rates. Just a straightforward 5% fixed interest.",
       gradient: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)",
     },
     {
@@ -236,82 +237,112 @@ export default function HowItWorks() {
           </Typography>
         </Box>
 
-        {/* For Students Section */}
+        {/* For Students Section — Interactive Stepper */}
         <Box mb={8}>
           <Box display="flex" alignItems="center" gap={2} mb={4}>
-            <Avatar
-              sx={{
-                bgcolor: "#f97316",
-                width: 56,
-                height: 56,
-              }}
-            >
+            <Avatar sx={{ bgcolor: "#f97316", width: 56, height: 56 }}>
               <SchoolIcon sx={{ fontSize: 32 }} />
             </Avatar>
-            <Typography
-              variant="h4"
-              sx={{
-                color: "white",
-                fontWeight: 700,
-              }}
-            >
+            <Typography variant="h4" sx={{ color: "white", fontWeight: 700 }}>
               For Students (Borrowers)
             </Typography>
           </Box>
 
-          <Grid container spacing={3}>
+          <Stepper
+            activeStep={activeStep}
+            orientation="vertical"
+            sx={{
+              "& .MuiStepConnector-line": {
+                borderColor: "rgba(255,255,255,0.1)",
+                borderLeftWidth: 2,
+              },
+            }}
+          >
             {studentSteps.map((step, index) => (
-              <GridItem xs={12} sm={6} md={6} lg={6} key={index}>
-                <Card
-                  elevation={0}
+              <Step key={step.label}>
+                <StepLabel
+                  onClick={() => setActiveStep(index)}
+                  sx={{ cursor: "pointer" }}
+                  StepIconComponent={() => (
+                    <Avatar
+                      sx={{
+                        width: 44,
+                        height: 44,
+                        bgcolor:
+                          activeStep === index
+                            ? "#f97316"
+                            : activeStep > index
+                            ? "rgba(16,185,129,0.3)"
+                            : "rgba(255,255,255,0.1)",
+                        border: `2px solid ${
+                          activeStep === index
+                            ? "#f97316"
+                            : activeStep > index
+                            ? "#10b981"
+                            : "rgba(255,255,255,0.2)"
+                        }`,
+                        transition: "all 0.3s ease",
+                      }}
+                    >
+                      {activeStep > index ? (
+                        <Typography sx={{ color: "#10b981", fontWeight: 700 }}>
+                          ✓
+                        </Typography>
+                      ) : (
+                        <Box
+                          sx={{
+                            color:
+                              activeStep === index
+                                ? "white"
+                                : "rgba(255,255,255,0.4)",
+                            "& svg": { fontSize: 20 },
+                          }}
+                        >
+                          {step.icon}
+                        </Box>
+                      )}
+                    </Avatar>
+                  )}
+                >
+                  <Typography
+                    sx={{
+                      color:
+                        activeStep === index
+                          ? "white"
+                          : "rgba(255,255,255,0.5)",
+                      fontWeight: activeStep === index ? 700 : 400,
+                      fontSize: "1.1rem",
+                      transition: "all 0.3s ease",
+                    }}
+                  >
+                    {step.label}
+                  </Typography>
+                </StepLabel>
+
+                <StepContent
                   sx={{
-                    background: "rgba(255, 255, 255, 0.05)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255, 255, 255, 0.1)",
-                    borderRadius: 4,
-                    height: "100%",
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      transform: "translateY(-4px)",
-                      boxShadow: "0 8px 32px rgba(249, 115, 22, 0.2)",
-                      border: "1px solid rgba(249, 115, 22, 0.3)",
-                    },
+                    borderLeft: "2px solid rgba(255,255,255,0.1)",
+                    ml: "21px",
                   }}
                 >
-                  <CardContent sx={{ p: 4 }}>
-                    <Box display="flex" alignItems="center" gap={2} mb={2}>
-                      <Avatar
-                        sx={{
-                          bgcolor: "rgba(249, 115, 22, 0.2)",
-                          color: "#f97316",
-                          width: 48,
-                          height: 48,
-                        }}
-                      >
-                        {step.icon}
-                      </Avatar>
-                      <Box>
-                        <Chip
-                          label={`Step ${index + 1}`}
-                          size="small"
-                          sx={{
-                            bgcolor: "rgba(249, 115, 22, 0.2)",
-                            color: "#f97316",
-                            fontWeight: 600,
-                            mb: 0.5,
-                          }}
-                        />
-                        <Typography
-                          variant="h6"
-                          sx={{ color: "white", fontWeight: 700 }}
-                        >
-                          {step.label}
-                        </Typography>
-                      </Box>
-                    </Box>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 3,
+                      mb: 2,
+                      background: "rgba(255,255,255,0.05)",
+                      backdropFilter: "blur(10px)",
+                      border: "1px solid rgba(249,115,22,0.3)",
+                      borderLeft: "4px solid #f97316",
+                      borderRadius: 3,
+                    }}
+                  >
                     <Typography
-                      variant="body1"
-                      sx={{ color: "rgba(255, 255, 255, 0.7)", mb: 2 }}
+                      sx={{
+                        color: "rgba(255,255,255,0.85)",
+                        mb: 2,
+                        lineHeight: 1.7,
+                      }}
                     >
                       {step.description}
                     </Typography>
@@ -322,7 +353,7 @@ export default function HowItWorks() {
                           pl: 2,
                           m: 0,
                           "& li": {
-                            color: "rgba(255, 255, 255, 0.6)",
+                            color: "rgba(255,255,255,0.6)",
                             fontSize: "0.875rem",
                             mb: 0.5,
                           },
@@ -333,32 +364,100 @@ export default function HowItWorks() {
                         ))}
                       </Box>
                     )}
-                  </CardContent>
-                </Card>
-              </GridItem>
+                  </Paper>
+
+                  <Box display="flex" gap={2} mb={2}>
+                    <Button
+                      variant="contained"
+                      onClick={() =>
+                        setActiveStep((prev) =>
+                          Math.min(prev + 1, studentSteps.length - 1)
+                        )
+                      }
+                      disabled={activeStep === studentSteps.length - 1}
+                      sx={{
+                        background:
+                          "linear-gradient(135deg, #f97316 0%, #ea580c 100%)",
+                        fontWeight: 600,
+                        borderRadius: 2,
+                        textTransform: "none",
+                        "&:disabled": {
+                          background: "rgba(255,255,255,0.1)",
+                          color: "rgba(255,255,255,0.3)",
+                        },
+                      }}
+                    >
+                      {activeStep === studentSteps.length - 1
+                        ? "Done"
+                        : "Next Step →"}
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        setActiveStep((prev) => Math.max(prev - 1, 0))
+                      }
+                      disabled={activeStep === 0}
+                      sx={{
+                        color: "rgba(255,255,255,0.5)",
+                        border: "1px solid rgba(255,255,255,0.2)",
+                        borderRadius: 2,
+                        textTransform: "none",
+                        "&:disabled": { opacity: 0.3 },
+                      }}
+                    >
+                      ← Back
+                    </Button>
+                  </Box>
+                </StepContent>
+              </Step>
             ))}
-          </Grid>
+          </Stepper>
+
+          {/* Completion message */}
+          {activeStep === studentSteps.length && (
+            <Paper
+              elevation={0}
+              sx={{
+                p: 4,
+                mt: 2,
+                background: "rgba(16,185,129,0.1)",
+                border: "1px solid rgba(16,185,129,0.3)",
+                borderRadius: 4,
+                textAlign: "center",
+              }}
+            >
+              <Typography
+                variant="h5"
+                sx={{ color: "#10b981", fontWeight: 700, mb: 1 }}
+              >
+                ✓ You're ready to use MicroLend!
+              </Typography>
+              <Typography sx={{ color: "rgba(255,255,255,0.7)", mb: 3 }}>
+                Connect your wallet and start lending or borrowing today.
+              </Typography>
+              <Button
+                onClick={() => setActiveStep(0)}
+                variant="outlined"
+                sx={{
+                  borderColor: "#10b981",
+                  color: "#10b981",
+                  borderRadius: 2,
+                  textTransform: "none",
+                  fontWeight: 600,
+                }}
+              >
+                Review Steps Again
+              </Button>
+            </Paper>
+          )}
         </Box>
 
         {/* For Lenders Section */}
         <Box mb={8}>
           <Box display="flex" alignItems="center" gap={2} mb={4}>
-            <Avatar
-              sx={{
-                bgcolor: "#6366f1",
-                width: 56,
-                height: 56,
-              }}
-            >
+            <Avatar sx={{ bgcolor: "#6366f1", width: 56, height: 56 }}>
               <AccountBalanceIcon sx={{ fontSize: 32 }} />
             </Avatar>
-            <Typography
-              variant="h4"
-              sx={{
-                color: "white",
-                fontWeight: 700,
-              }}
-            >
+            <Typography variant="h4" sx={{ color: "white", fontWeight: 700 }}>
               For Lenders (Investors)
             </Typography>
           </Box>
@@ -370,7 +469,8 @@ export default function HowItWorks() {
                   elevation={0}
                   sx={{
                     p: 4,
-                    background: "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)",
+                    background:
+                      "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)",
                     borderRadius: 4,
                     height: "100%",
                     textAlign: "center",
@@ -384,7 +484,7 @@ export default function HowItWorks() {
                 >
                   <Avatar
                     sx={{
-                      bgcolor: "rgba(255, 255, 255, 0.2)",
+                      bgcolor: "rgba(255,255,255,0.2)",
                       width: 64,
                       height: 64,
                       mx: "auto",
@@ -399,7 +499,10 @@ export default function HowItWorks() {
                   >
                     {step.label}
                   </Typography>
-                  <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.8)" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "rgba(255,255,255,0.8)" }}
+                  >
                     {step.description}
                   </Typography>
                 </Paper>
@@ -424,15 +527,15 @@ export default function HowItWorks() {
                 <Card
                   elevation={0}
                   sx={{
-                    background: "rgba(255, 255, 255, 0.05)",
+                    background: "rgba(255,255,255,0.05)",
                     backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    border: "1px solid rgba(255,255,255,0.1)",
                     borderRadius: 4,
                     height: "100%",
                     transition: "all 0.3s ease",
                     "&:hover": {
                       transform: "translateY(-4px)",
-                      boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+                      boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
                     },
                   }}
                 >
@@ -456,7 +559,7 @@ export default function HowItWorks() {
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ color: "rgba(255, 255, 255, 0.7)" }}
+                          sx={{ color: "rgba(255,255,255,0.7)" }}
                         >
                           {feature.description}
                         </Typography>
@@ -484,32 +587,22 @@ export default function HowItWorks() {
               <Accordion
                 key={index}
                 sx={{
-                  background: "rgba(255, 255, 255, 0.05)",
+                  background: "rgba(255,255,255,0.05)",
                   backdropFilter: "blur(10px)",
-                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                  border: "1px solid rgba(255,255,255,0.1)",
                   borderRadius: "12px !important",
                   mb: 2,
                   "&:before": { display: "none" },
-                  "&.Mui-expanded": {
-                    margin: "0 0 16px 0",
-                  },
+                  "&.Mui-expanded": { margin: "0 0 16px 0" },
                 }}
               >
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon sx={{ color: "#f97316" }} />}
-                  sx={{
-                    "& .MuiAccordionSummary-content": {
-                      my: 2,
-                    },
-                  }}
+                  sx={{ "& .MuiAccordionSummary-content": { my: 2 } }}
                 >
                   <Typography
                     variant="h6"
-                    sx={{
-                      color: "white",
-                      fontWeight: 600,
-                      fontSize: "1.1rem",
-                    }}
+                    sx={{ color: "white", fontWeight: 600, fontSize: "1.1rem" }}
                   >
                     {faq.question}
                   </Typography>
@@ -517,7 +610,10 @@ export default function HowItWorks() {
                 <AccordionDetails>
                   <Typography
                     variant="body1"
-                    sx={{ color: "rgba(255, 255, 255, 0.7)", lineHeight: 1.7 }}
+                    sx={{
+                      color: "rgba(255,255,255,0.7)",
+                      lineHeight: 1.7,
+                    }}
                   >
                     {faq.answer}
                   </Typography>
@@ -546,10 +642,15 @@ export default function HowItWorks() {
           </Typography>
           <Typography
             variant="body1"
-            sx={{ color: "rgba(255,255,255,0.9)", mb: 4, maxWidth: 600, mx: "auto" }}
+            sx={{
+              color: "rgba(255,255,255,0.9)",
+              mb: 4,
+              maxWidth: 600,
+              mx: "auto",
+            }}
           >
-            Connect your wallet and join hundreds of students accessing affordable
-            education financing on the blockchain.
+            Connect your wallet and join hundreds of students accessing
+            affordable education financing on the blockchain.
           </Typography>
           <Box display="flex" gap={2} justifyContent="center" flexWrap="wrap">
             <Chip
