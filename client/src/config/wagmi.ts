@@ -12,6 +12,6 @@ export const config = createConfig({
     [sepolia.id]: http(
       "https://eth-sepolia.g.alchemy.com/v2/owM_j1tPi885DmLErgItK",
     ), // free public RPC
-    // OR use your Alchemy: http('https://eth-sepolia.g.alchemy.com/v2/YOUR_KEY')
+    // OR use your Alchemy: http(`https://eth-sepolia.g.alchemy.com/v2/${import.meta.env.VITE_ALCHEMY_KEY}`)
   },
 });
