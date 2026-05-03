@@ -462,7 +462,7 @@ export default function Dashboard() {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        minHeight: "102vh",
         background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
         pt: 4,
         pb: 8,
