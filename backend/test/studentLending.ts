@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-// import hre from "hardhat";
+// import here from "hardhat";
 import { StudentLending, MockERC20 } from "../typechain-types"; // adjust if names differ
 
 describe("StudentLending", function () {
@@ -75,7 +75,7 @@ describe("StudentLending", function () {
 
   describe("Borrow", function () {
     beforeEach(async function () {
-      // Setup: deposit liquidity + verify student
+      // Setup: deposit liquidity + verifying the student
       const depositAmount = ethers.parseUnits("2000", TOKEN_DECIMALS);
       await token
         .connect(lender)
